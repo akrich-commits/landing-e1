@@ -52,18 +52,8 @@ const Footer = () => {
             <h3 className="text-gold-main font-heading font-bold mb-4">Контакты</h3>
             <ul className="space-y-2 text-white/70 font-body text-sm">
               <li>
-                <a href="mailto:info@ekonomizm.ru" className="hover:text-gold-main transition-colors duration-300">
-                  Email: info@ekonomizm.ru
-                </a>
-              </li>
-              <li>
-                <a href="https://t.me/ekonomizm" target="_blank" rel="noopener noreferrer" className="hover:text-gold-main transition-colors duration-300">
-                  Telegram: @ekonomizm
-                </a>
-              </li>
-              <li>
-                <a href="tel:+79991234567" className="hover:text-gold-main transition-colors duration-300">
-                  Телефон: +7 (999) 123-45-67
+                <a href="https://t.me/Economism_private_support" target="_blank" rel="noopener noreferrer" className="hover:text-gold-main transition-colors duration-300">
+                  Telegram: @Economism_private_support
                 </a>
               </li>
             </ul>

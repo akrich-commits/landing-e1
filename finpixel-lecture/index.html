@@ -3,707 +3,448 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ФинПиксель — лекция 30–40 мин</title>
+  <title>ФинПиксель — сжатая лекция</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet" />
   <style>
+
     :root {
-      --bg: #12151a;
-      --bg-elev: #1a1f27;
-      --ink: #f2efe8;
-      --muted: #9aa3b2;
-      --line: rgba(242, 239, 232, 0.12);
-      --accent: #d4a017;
-      --accent-soft: rgba(212, 160, 23, 0.16);
-      --good: #6fbf9a;
-      --warn: #e07a5f;
-      --slide-pad: clamp(1.5rem, 4vw, 4.5rem);
+      --bg: #f6f3ec;
+      --card: #ffffff;
+      --card-2: #f0ebe1;
+      --ink: #1a1712;
+      --muted: #5c564c;
+      --gold: #8a6d35;
+      --gold-bright: #9c7a3a;
+      --line: rgba(138, 109, 53, 0.35);
+      --hair: rgba(26, 23, 18, 0.12);
+      --pad: clamp(2rem, 5vw, 3.75rem);
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: "IBM Plex Sans", system-ui, sans-serif;
-      overflow: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse 80% 60% at 10% -10%, rgba(212, 160, 23, 0.14), transparent 55%),
-        radial-gradient(ellipse 70% 50% at 100% 100%, rgba(111, 191, 154, 0.08), transparent 50%),
-        linear-gradient(180deg, transparent, rgba(0,0,0,0.25));
-      z-index: 0;
-    }
-
-    .deck {
-      position: relative;
-      z-index: 1;
-      height: 100%;
-      width: 100%;
-    }
-
-    .slide {
-      display: none;
-      height: 100%;
-      width: min(1180px, 100%);
-      padding: var(--slide-pad);
-      padding-bottom: 3.5rem;
-      flex-direction: column;
-      justify-content: center;
-      gap: 1.25rem;
-      margin: 0 auto;
-      animation: fadeIn 0.35s ease;
-    }
-
+    html, body { height: 100%; background: var(--bg); color: var(--ink); font-family: Manrope, system-ui, sans-serif; overflow: hidden; }
+    .deck { height: 100%; width: 100%; position: relative; }
+    .slide { display: none; position: relative; width: min(1440px, 100%); height: 100%; margin: 0 auto; padding: var(--pad); padding-bottom: 3.25rem; flex-direction: column; justify-content: center; gap: 1.15rem; }
     .slide.active { display: flex; }
+    .slide::before { content: ""; position: absolute; inset: 0; pointer-events: none; background:
+      radial-gradient(ellipse 50% 60% at 92% 8%, rgba(138, 109, 53, 0.10), transparent 55%),
+      linear-gradient(180deg, #fbf9f4, #f3efe6); }
+    .geo { position: absolute; right: 7%; top: 18%; width: 220px; height: 320px; pointer-events: none; opacity: 0.9; }
+    .geo .circle { position: absolute; width: 260px; height: 260px; border-radius: 50%; border: 1px solid rgba(138, 109, 53, 0.28); right: -40px; top: -20px; }
+    .geo .v { position: absolute; top: 0; bottom: 40px; width: 1px; background: rgba(92, 86, 76, 0.28); }
+    .geo .dot { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+    .geo .dot.lg { width: 14px; height: 14px; background: var(--gold-bright); }
+    .kicker { font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); font-weight: 600; position: relative; z-index: 1; }
+    .rule { width: 48px; height: 1px; background: rgba(138, 109, 53, 0.55); position: relative; z-index: 1; }
+    h1, h2 { font-weight: 600; letter-spacing: -0.025em; line-height: 1.12; position: relative; z-index: 1; color: var(--ink); }
+    h1 { font-size: clamp(2.6rem, 5.5vw, 4.4rem); max-width: 16ch; }
+    h2 { font-size: clamp(1.7rem, 3.6vw, 2.75rem); max-width: 24ch; }
+    .title-row { display: flex; gap: 1.1rem; align-items: stretch; position: relative; z-index: 1; }
+    .title-row .bar { width: 5px; background: var(--gold); border-radius: 2px; flex: 0 0 auto; }
+    .lead { font-size: clamp(1.05rem, 1.7vw, 1.3rem); color: var(--muted); max-width: 46ch; line-height: 1.5; position: relative; z-index: 1; }
+    .quote { font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-size: clamp(1.25rem, 2.2vw, 1.7rem); color: var(--gold-bright); line-height: 1.35; max-width: 36ch; position: relative; z-index: 1; }
+    .big { font-size: clamp(4rem, 12vw, 7.5rem); font-weight: 700; color: var(--gold-bright); letter-spacing: -0.04em; position: relative; z-index: 1; }
+    .brand-name { font-size: clamp(3rem, 7vw, 5.2rem); font-weight: 700; letter-spacing: -0.03em; position: relative; z-index: 1; }
+    .grid-2, .grid-3, .grid-4 { display: grid; gap: 0.9rem; width: 100%; position: relative; z-index: 1; }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 900px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } .geo { display: none; } }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 1.1rem 1.2rem; box-shadow: 0 8px 24px rgba(26, 23, 18, 0.04); }
+    .card.soft { background: var(--card-2); }
+    .card .label { display: block; color: var(--gold); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; margin-bottom: 0.45rem; }
+    .card strong { display: block; font-size: 1.15rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--ink); }
+    .card p { color: var(--muted); font-size: 0.98rem; line-height: 1.45; }
+    ul.bullets { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; position: relative; z-index: 1; }
+    ul.bullets li { padding-left: 1.2rem; position: relative; font-size: clamp(1.02rem, 1.6vw, 1.22rem); line-height: 1.4; color: var(--ink); }
+    ul.bullets li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--gold); }
+    ol.steps { list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 0.75rem; position: relative; z-index: 1; }
+    ol.steps li { display: grid; grid-template-columns: 2.2rem 1fr; gap: 0.75rem; font-size: clamp(1.02rem, 1.6vw, 1.2rem); line-height: 1.4; color: var(--ink); }
+    ol.steps li::before { counter-increment: s; content: counter(s); color: var(--gold-bright); font-weight: 700; }
+    .ladder { display: flex; flex-direction: column; gap: 0.55rem; width: min(720px, 100%); position: relative; z-index: 1; }
+    .ladder .rung { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 0.7rem 1rem; display: flex; gap: 0.85rem; align-items: baseline; color: var(--ink); font-size: 1.05rem; box-shadow: 0 4px 14px rgba(26,23,18,0.03); }
+    .ladder .rung span { color: var(--gold-bright); font-weight: 700; min-width: 1.2rem; }
+    .ladder .rung:nth-child(1) { width: 62%; }
+    .ladder .rung:nth-child(2) { width: 72%; }
+    .ladder .rung:nth-child(3) { width: 82%; }
+    .ladder .rung:nth-child(4) { width: 92%; }
+    .ladder .rung:nth-child(5) { width: 100%; }
+    .callout { border: 1px solid var(--line); border-radius: 12px; padding: 0.95rem 1.15rem; color: var(--gold-bright); font-size: clamp(1.05rem, 1.7vw, 1.25rem); line-height: 1.4; width: 100%; position: relative; z-index: 1; background: rgba(138, 109, 53, 0.08); }
+    .map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; width: 100%; position: relative; z-index: 1; }
+    .map .step { border-top: 1px solid rgba(92, 86, 76, 0.25); padding-top: 0.7rem; }
+    .map .step.on { border-top-color: var(--gold-bright); }
+    .map .step .n { color: var(--gold); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.35rem; }
+    .map .step.on .n, .map .step.on strong { color: var(--gold-bright); }
+    .map .step strong { display: block; font-size: 1.05rem; margin-bottom: 0.25rem; }
+    .map .step p { color: var(--muted); font-size: 0.9rem; line-height: 1.35; }
+    .two-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem 1.5rem; width: 100%; position: relative; z-index: 1; }
+    .two-list li { list-style: none; border-bottom: 1px solid var(--hair); padding: 0.55rem 0; font-size: 1rem; color: var(--ink); }
+    .foot { position: absolute; left: var(--pad); right: var(--pad); bottom: 1.1rem; display: flex; justify-content: space-between; color: rgba(92, 86, 76, 0.65); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; z-index: 2; }
+    .chrome { position: fixed; z-index: 10; top: 0.85rem; right: 1rem; font-size: 0.75rem; color: rgba(92, 86, 76, 0.7); }
+    .progress-wrap { position: fixed; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(26, 23, 18, 0.08); z-index: 10; }
+    .progress-wrap > span { display: block; height: 100%; background: var(--gold); width: 0; transition: width 0.2s ease; }
+    .meta { color: var(--muted); font-size: 0.95rem; position: relative; z-index: 1; }
+    .meta a { color: var(--gold-bright); text-decoration: none; }
+    @media print { .chrome, .progress-wrap { display: none !important; } }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: none; }
-    }
-
-    .eyebrow {
-      font-size: 0.85rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    h1, h2, h3 {
-      font-family: Geologica, sans-serif;
-      font-weight: 600;
-      line-height: 1.12;
-      letter-spacing: -0.02em;
-    }
-
-    h1 { font-size: clamp(2.4rem, 6vw, 4.4rem); max-width: 18ch; }
-    h2 { font-size: clamp(1.8rem, 4.2vw, 3.1rem); max-width: 28ch; }
-    h3 { font-size: clamp(1.2rem, 2.4vw, 1.6rem); }
-
-    .lead {
-      font-size: clamp(1.05rem, 2vw, 1.35rem);
-      color: var(--muted);
-      max-width: 52ch;
-      line-height: 1.5;
-    }
-
-    .brand {
-      font-family: Geologica, sans-serif;
-      font-size: clamp(2.8rem, 7vw, 5rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-
-    .brand span { color: var(--accent); }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-      width: 100%;
-      margin-top: 0.5rem;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      width: 100%;
-      margin-top: 0.5rem;
-    }
-
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.85rem;
-      width: 100%;
-    }
-
-    @media (max-width: 800px) {
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-      h1 { max-width: none; }
-    }
-
-    .card {
-      background: var(--bg-elev);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 1.15rem 1.25rem;
-    }
-
-    .card strong {
-      display: block;
-      font-family: Geologica, sans-serif;
-      margin-bottom: 0.35rem;
-      font-size: 1.05rem;
-    }
-
-    .card p, .card li {
-      color: var(--muted);
-      font-size: 0.98rem;
-      line-height: 1.45;
-    }
-
-    .card.accent {
-      background: var(--accent-soft);
-      border-color: rgba(212, 160, 23, 0.35);
-    }
-
-    ul.clean {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      margin-top: 0.5rem;
-    }
-
-    ul.clean li {
-      position: relative;
-      padding-left: 1.35rem;
-      font-size: clamp(1rem, 1.8vw, 1.2rem);
-      line-height: 1.4;
-      color: var(--ink);
-    }
-
-    ul.clean li::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0.55em;
-      width: 0.55rem;
-      height: 0.55rem;
-      border-radius: 2px;
-      background: var(--accent);
-    }
-
-    .big-answer {
-      font-family: Geologica, sans-serif;
-      font-size: clamp(3.5rem, 12vw, 8rem);
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: -0.04em;
-    }
-
-    .formula {
-      font-family: Geologica, sans-serif;
-      font-size: clamp(1.15rem, 2.5vw, 1.7rem);
-      background: var(--bg-elev);
-      border-left: 4px solid var(--accent);
-      padding: 1rem 1.25rem;
-      border-radius: 0 12px 12px 0;
-      line-height: 1.4;
-    }
-
-    .steps {
-      counter-reset: step;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-top: 0.25rem;
-    }
-
-    .steps li {
-      list-style: none;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.9rem;
-      align-items: start;
-      font-size: clamp(1rem, 1.8vw, 1.2rem);
-      line-height: 1.4;
-    }
-
-    .steps li::before {
-      counter-increment: step;
-      content: counter(step, decimal-leading-zero);
-      font-family: Geologica, sans-serif;
-      color: var(--accent);
-      font-weight: 600;
-      font-size: 0.95em;
-      min-width: 2ch;
-    }
-
-    .tag {
-      display: inline-block;
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      border: 1px solid rgba(212, 160, 23, 0.4);
-      padding: 0.2rem 0.55rem;
-      border-radius: 999px;
-      margin-bottom: 0.5rem;
-    }
-
-    .footer-bar {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 5;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 1.25rem;
-      background: linear-gradient(transparent, rgba(18, 21, 26, 0.92) 40%);
-      font-size: 0.85rem;
-      color: #c5c9d2;
-      pointer-events: none;
-    }
-
-    .footer-bar .progress {
-      width: min(220px, 30vw);
-      height: 3px;
-      background: var(--line);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-
-    .footer-bar .progress > span {
-      display: block;
-      height: 100%;
-      background: var(--accent);
-      width: 0%;
-      transition: width 0.25s ease;
-    }
-
-    .hint {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 5;
-      font-size: 0.82rem;
-      color: #c5c9d2;
-      opacity: 0.9;
-    }
-
-    .quote {
-      font-family: Geologica, sans-serif;
-      font-size: clamp(1.4rem, 3.2vw, 2.2rem);
-      max-width: 26ch;
-      line-height: 1.25;
-    }
-
-    .muted { color: var(--muted); }
-    .accent-text { color: var(--accent); }
-    .good { color: var(--good); }
-    .warn { color: var(--warn); }
-
-    .two-col-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem 1.5rem;
-      width: 100%;
-      margin-top: 0.5rem;
-    }
-
-    .two-col-list li {
-      list-style: none;
-      padding: 0.55rem 0.7rem;
-      border-bottom: 1px solid var(--line);
-      font-size: 0.98rem;
-      color: var(--ink);
-    }
-
-    @media (max-width: 700px) {
-      .two-col-list { grid-template-columns: 1fr; }
-    }
-
-    .timing {
-      font-size: 0.8rem;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-    }
   </style>
 </head>
 <body>
-  <div class="hint">← → · пробел · F — полный экран</div>
-
+  <div class="chrome">← → · пробел · F</div>
+  <div class="progress-wrap"><span id="bar"></span></div>
   <div class="deck" id="deck">
 
-    <!-- 1 -->
     <section class="slide active" data-min="1">
-      <p class="eyebrow">ФинПиксель · сжатая лекция · 30–40 мин</p>
-      <p class="brand">Деньги работают.<br /><span>Даже когда смена — нет.</span></p>
-      <p class="lead">Система под неровный доход: контроль → защита → архитектура → конструкция. Без воды и без сюсюканья.</p>
-      <p class="timing">Алексей Кричевский · krichevskiy.ru/finpixel</p>
-    </section>
-
-    <!-- 2 -->
-    <section class="slide" data-min="1">
-      <p class="eyebrow">Главный вопрос</p>
-      <h2>Как получить пассивный доход 500 000 ₽ — легко, без времени и без капитала?</h2>
-    </section>
-
-    <!-- 3 -->
-    <section class="slide" data-min="1">
-      <p class="big-answer">Никак.</p>
-      <p class="lead">«Пассивный доход» в рекламе — сказка. В реальности есть капитал, дисциплина и правила. Зарабатывать вы уже умеете. Дальше — не сливать и собирать систему.</p>
-    </section>
-
-    <!-- 4 -->
-    <section class="slide" data-min="2">
-      <p class="eyebrow">Ваша специфика</p>
-      <h2>Неровный доход — не приговор. Это архитектура</h2>
-      <div class="grid-3">
-        <div class="card accent"><strong>Кэш и пики</strong><p>Хорошая неделя ≠ средний месяц. Считаем по среднему из 3–6 месяцев, а не по лучшему вечеру.</p></div>
-        <div class="card"><strong>Рабочие траты</strong><p>Внешность, дорога, уход — часть профессии. Но «рабочее» ≠ «любая покупка после смены».</p></div>
-        <div class="card"><strong>Резерв важнее</strong><p>Когда доход скачет, подушка ближе к 9–12 месяцам обязательных расходов — не к трём.</p></div>
+      <div class="geo" aria-hidden="true">
+        <div class="circle"></div>
+        <div class="v" style="left:40px"></div><div class="v" style="left:78px"></div>
+        <div class="v" style="left:116px"></div><div class="v" style="left:154px"></div>
+        <div class="dot" style="left:36px; top:70px"></div>
+        <div class="dot" style="left:74px; top:140px"></div>
+        <div class="dot lg" style="left:112px; top:100px"></div>
+        <div class="dot" style="left:150px; top:200px"></div>
       </div>
+      <p class="kicker">Курс финансовой грамотности</p>
+      <div class="title-row"><div class="bar"></div><div>
+          <p class="brand-name">ФинПиксель</p>
+          <p class="quote" style="margin-top:0.6rem">Сжатая лекция · 30–40 минут</p>
+      </div></div>
+      <p class="lead">Контроль → защита → архитектура капитала → рабочая конструкция. Без воды — только рабочая система.</p>
+      <p class="meta">Алексей Кричевский · <a href="https://krichevskiy.ru/finpixel">krichevskiy.ru/finpixel</a></p>
+      <div class="foot"><span>ФинПиксель</span><span>01</span></div>
     </section>
 
-    <!-- 5 -->
     <section class="slide" data-min="1">
-      <p class="eyebrow">Карта лекции</p>
+      <div class="rule"></div>
+      <h2>Главный вопрос</h2>
+      <p class="lead" style="font-size:clamp(1.35rem,2.4vw,1.9rem); color:var(--ink); max-width:28ch">Как добиться пассивного дохода в 500 тысяч рублей в лёгкости — без больших временных затрат и без капитала?</p>
+      <div class="foot"><span>ФинПиксель</span><span>02</span></div>
+    </section>
+
+    <section class="slide" data-min="1">
+      <p class="big">Никак.</p>
+      <p class="quote">Забудьте про «пассивный доход». Его в бытовом смысле не существует.</p>
+      <p class="lead">Есть капитал, дисциплина и правила. Дальше — как их собрать.</p>
+      <div class="foot"><span>ФинПиксель</span><span>03</span></div>
+    </section>
+
+    <section class="slide" data-min="1">
+      <p class="kicker">Карта лекции</p>
       <h2>Четыре слоя одной системы</h2>
-      <div class="grid-4">
-        <div class="card accent"><span class="tag">01 · 9 мин</span><strong>Контроль</strong><p>Учёт кэша, утечки, подушка</p></div>
-        <div class="card"><span class="tag">02 · 7 мин</span><strong>Защита</strong><p>Скам, пирамиды, фильтр</p></div>
-        <div class="card"><span class="tag">03 · 11 мин</span><strong>Архитектура</strong><p>Корзины денег и уровни риска</p></div>
-        <div class="card"><span class="tag">04 · 9 мин</span><strong>Конструкция</strong><p>Вклады, ОФЗ, план на год</p></div>
+      <div class="map">
+        <div class="step on"><div class="n">01</div><strong>Контроль</strong><p>Бюджет, утечки, подушка</p></div>
+        <div class="step"><div class="n">02</div><strong>Защита</strong><p>Скам, пирамиды, фильтр</p></div>
+        <div class="step"><div class="n">03</div><strong>Архитектура</strong><p>Задачи денег и уровни риска</p></div>
+        <div class="step"><div class="n">04</div><strong>Конструкция</strong><p>Вклады, ОФЗ, план</p></div>
       </div>
+      <p class="quote">Сначала учимся не терять. Потом — зарабатывать.</p>
+      <div class="foot"><span>ФинПиксель</span><span>04</span></div>
     </section>
 
-    <!-- 6 -->
     <section class="slide" data-min="1">
-      <p class="eyebrow">Блок 1 · Контроль</p>
-      <h2>Грамотность — не аскеза и не «жить на гречке»</h2>
-      <div class="grid-2">
-        <div class="card">
-          <strong>На практике</strong>
-          <p>Спокойствие вокруг денег, запас на простой сезон, меньше стресса — и решения без паники.</p>
-        </div>
-        <div class="card accent">
-          <strong>Фокус</strong>
-          <p>Одним хватает 100 тыс., другим мало миллиона. Дело не в цифре наличных за ночь — в том, куда они уходят на утро.</p>
-        </div>
-      </div>
+      <div class="geo" aria-hidden="true"><div class="circle"></div>
+        <div class="v" style="left:50px"></div><div class="v" style="left:95px"></div><div class="v" style="left:140px"></div>
+        <div class="dot lg" style="left:90px; top:120px"></div></div>
+      <div class="title-row"><div class="bar"></div><div>
+        <h1>Контроль</h1>
+        <p class="lead" style="margin-top:0.7rem">Базовые понятия, бюджет и сбережения</p>
+      </div></div>
+      <div class="foot"><span>ФинПиксель</span><span>05</span></div>
     </section>
 
-    <!-- 7 -->
     <section class="slide" data-min="2">
-      <p class="eyebrow">Блок 1 · Бюджет</p>
-      <h2>Два шага, которые открывают глаза</h2>
+      <div class="rule"></div>
+      <h2>Что такое финансовая грамотность</h2>
+      <div class="grid-2">
+        <div class="card"><span class="label">Академическое</span><p>Осведомлённость, знания, навыки, установки и поведение — для разумных решений и личного благополучия.</p></div>
+        <div class="card soft"><span class="label">Практическое</span><p>Как двигаться к денежному спокойствию, переживать кризисы, снижать стресс и применять знания в жизни.</p></div>
+      </div>
+      <div class="callout">Не только про расходы. В большей степени — про доходы. Невозможно бесконечно резать косты.</div>
+      <div class="foot"><span>ФинПиксель</span><span>06</span></div>
+    </section>
+
+    <section class="slide" data-min="2">
+      <div class="rule"></div>
+      <h2>Одним хватает 100 тысяч, другим — мало миллиона</h2>
+      <p class="lead">Дело не в цифре, а в привычках и в том, как вы управляете деньгами.</p>
       <ol class="steps">
-        <li><span><strong>Свести 3–6 месяцев.</strong> Весь доход: карта + кэш + переводы. Обязательные vs необязательные. Средний месяц важнее «лучшей пятницы».</span></li>
-        <li><span><strong>Дневник затрат — особенно наличка.</strong> Такси 800 ₽ × 4 ночи × 4 недели × 12 ≈ <span class="accent-text">150 000+ ₽ в год</span>. Мелочь кумулятивно бьёт сильнее «крупных решений».</span></li>
+        <li><span><strong>Свести 3–6 месяцев</strong> доходов и расходов — отдельно и как домохозяйство. Обязательные vs необязательные.</span></li>
+        <li><span><strong>Вести дневник затрат.</strong> Кофе 300 ₽ × 5 × 4 × 12 = <span style="color:var(--gold-bright)">72 000 ₽ в год</span>. Мелочь кумулятивно бьёт сильнее «крупных решений».</span></li>
       </ol>
-      <p class="lead" style="margin-top:0.5rem">Банковское приложение + заметка «кэш за смену» в телефоне. Красота таблицы не важна. Важна честность.</p>
+      <div class="foot"><span>ФинПиксель</span><span>07</span></div>
     </section>
 
-    <!-- 8 -->
     <section class="slide" data-min="1">
-      <p class="eyebrow">Блок 1 · Где утекает</p>
-      <h2>Типичные дыры — без морали</h2>
-      <ul class="two-col-list">
-        <li>«Я заслужила» после тяжёлой смены</li>
-        <li>Маркетплейсы и шопинг по настроению</li>
-        <li>Уход/образ: рабочее vs импульс</li>
+      <div class="rule"></div>
+      <h2>Где утекают деньги — без морали</h2>
+      <ul class="two-list">
+        <li>Подписки, которыми почти не пользуетесь</li>
         <li>Доставка и кафе без плана питания</li>
+        <li>Маркетплейсы и покупки «по настроению»</li>
+        <li>Крупные разовые «я заслужил»</li>
         <li>Кредитки и рассрочки как «не деньги»</li>
-        <li>Подарки и «помощь» без учёта в бюджете</li>
+        <li>Такси и удобство без учёта</li>
         <li>Эмоциональные траты после стресса</li>
-        <li>Подписки и списания из выписки</li>
+        <li>Списания, о которых узнаёте из выписки</li>
       </ul>
+      <div class="foot"><span>ФинПиксель</span><span>08</span></div>
     </section>
 
-    <!-- 9 -->
     <section class="slide" data-min="2">
-      <p class="eyebrow">Блок 1 · Рабочее vs личное</p>
-      <h2>Три корзины расходов — чтобы не путать</h2>
+      <div class="rule"></div>
+      <h2>Принципы сбережений и подушка</h2>
+      <div class="callout">Ориентир: 6 месяцев обязательных расходов + 20%. Неровный доход → ближе к 12 месяцам.</div>
       <div class="grid-3">
-        <div class="card accent"><strong>Жизнь</strong><p>Жильё, еда, связь, здоровье, базовый транспорт.</p></div>
-        <div class="card"><strong>Работа</strong><p>То, без чего смена реально хуже: образ, дорога, нужный уход. Лимит на месяц — заранее.</p></div>
-        <div class="card"><strong>Кайф</strong><p>Кафе, шопинг, поездки. Можно. Но после правила: сначала себе / в резерв.</p></div>
+        <div class="card"><span class="label">01</span><strong>Сначала себе</strong><p>Процент дохода уходит в резерв до остальных трат</p></div>
+        <div class="card"><span class="label">02</span><strong>Отдельно</strong><p>Не на той карте, с которой живёте каждый день</p></div>
+        <div class="card"><span class="label">03</span><strong>Ликвидность</strong><p>Вклад / накопительный. Не квартира и не «вернут потом»</p></div>
       </div>
-      <p class="lead">Если всё свалить в «мне надо для работы» — бюджет растворяется. Разделяете корзины — появляется воздух.</p>
+      <p class="quote">Подушка не обязана быть красивой. Она обязана быть.</p>
+      <div class="foot"><span>ФинПиксель</span><span>09</span></div>
     </section>
 
-    <!-- 10 -->
     <section class="slide" data-min="2">
-      <p class="eyebrow">Блок 1 · Подушка</p>
-      <h2>Резерв — ваш главный актив</h2>
-      <div class="formula">При скачущем доходе: 9–12 месяцев обязательных расходов.<br />Считаем минимум жизни + 20%, не «как в лучший месяц».</div>
-      <div class="grid-3" style="margin-top:0.75rem">
-        <div class="card"><strong>01 Отдельно</strong><p>Не в той карте, с которой живёте день ото дня</p></div>
-        <div class="card"><strong>02 Правило %</strong><p>С хорошей смены — фиксированный % сразу в резерв</p></div>
-        <div class="card"><strong>03 Ликвидность</strong><p>Вклад / накопительный. Не квартира и не «друг вернёт»</p></div>
+      <div class="rule"></div>
+      <h2>Три уровня личных финансов</h2>
+      <div class="grid-3">
+        <div class="card soft"><span class="label">01</span><strong>Безопасность</strong><p>Резерв 3–12 мес. Пережить потерю дохода без долгов и паники.</p></div>
+        <div class="card"><span class="label">02</span><strong>Независимость</strong><p>~10–15 годовых бюджетов в активах. Доход с капитала ≈ обязательные расходы.</p></div>
+        <div class="card"><span class="label">03</span><strong>Свобода</strong><p>Капитал покрывает желаемый уровень жизни. Деньги перестают ограничивать решения.</p></div>
       </div>
-      <p class="lead">Подушка не обязана быть красивой. Она обязана быть — особенно в мёртвый сезон.</p>
+      <div class="foot"><span>ФинПиксель</span><span>10</span></div>
     </section>
 
-    <!-- 11 -->
     <section class="slide" data-min="1">
-      <p class="eyebrow">Блок 1 · Три уровня</p>
-      <h2>Безопасность → независимость → свобода</h2>
-      <div class="grid-3">
-        <div class="card accent"><strong>Безопасность</strong><p>Резерв. Можно не выходить на смену месяц–два без долгов и паники.</p></div>
-        <div class="card"><strong>Независимость</strong><p>~10–15 годовых бюджетов в активах. Доход с капитала ≈ обязательные расходы.</p></div>
-        <div class="card"><strong>Свобода</strong><p>Капитал покрывает желаемый уровень жизни. Выбор — ваш, не чужой и не кассовый.</p></div>
-      </div>
-    </section>
-
-    <!-- 12 -->
-    <section class="slide" data-min="2">
-      <p class="eyebrow">Блок 1 · Психология</p>
-      <h2>Установки, которые сливают капитал</h2>
-      <ul class="clean">
-        <li>«Пока идёт — трачу, потом разберусь» → потом обычно уже поздно</li>
-        <li>«Сначала поднять доход — потом система» → «потом» не наступает</li>
-        <li>«Инвестиции — когда будут лишние» → лишних не бывает без правил</li>
-        <li>«Мне предложили вложить, раз я хорошо зарабатываю» → часто начало скама</li>
+      <div class="rule"></div>
+      <h2>Установки, которые дороже инструментов</h2>
+      <ul class="bullets">
+        <li>«Сначала поднять доход — потом система» → «потом» часто не наступает</li>
+        <li>«Инвестиции только при лишних деньгах» → лишних не бывает без правил</li>
+        <li>«Ошибка = катастрофа» → парализует и оставляет в инфляции</li>
+        <li>Расходы растут вместе с доходом (закон Паркинсона). Нарушить его — главный буст капитала</li>
       </ul>
-      <p class="lead">Закон Паркинсона: расходы растут вместе с доходом. Нарушить его — главный буст капитала.</p>
+      <div class="foot"><span>ФинПиксель</span><span>11</span></div>
     </section>
 
-    <!-- 13 -->
+    <section class="slide" data-min="1">
+      <div class="geo" aria-hidden="true"><div class="circle"></div>
+        <div class="v" style="left:50px"></div><div class="v" style="left:95px"></div><div class="v" style="left:140px"></div>
+        <div class="dot lg" style="left:90px; top:120px"></div></div>
+      <div class="title-row"><div class="bar"></div><div>
+        <h1>Защита</h1>
+        <p class="lead" style="margin-top:0.7rem">Инвестскам, пирамиды и личный фильтр</p>
+      </div></div>
+      <div class="foot"><span>ФинПиксель</span><span>12</span></div>
+    </section>
+
     <section class="slide" data-min="2">
-      <p class="eyebrow">Блок 2 · Защита · инвестскам</p>
-      <h2>Обман на доверии — до сих пор top of mind</h2>
+      <div class="rule"></div>
+      <h2>Инвестскам остаётся top of mind</h2>
       <div class="grid-2">
-        <div class="card">
-          <strong>Псевдоброкеры</strong>
-          <p>Холодные звонки и сообщения в мессенджерах, офисы в БЦ, «золотые горы». Деньги — наличными или на счета вне РФ.</p>
-        </div>
-        <div class="card accent">
-          <strong>Принцип трёх звонков</strong>
-          <p>1 — «знакомство» · 2 — «визитка» · 3 — «продажа». Плюс 4–5: FOMO и ещё одна попытка.</p>
-        </div>
+        <div class="card"><span class="label">Псевдоброкеры</span><p>Холодные звонки, офисы в топовых БЦ, обещание «золотых гор». Деньги — наличными или на счета вне РФ. Такие схемы по-прежнему крутят огромные обороты.</p></div>
+        <div class="card soft"><span class="label">Принцип трёх звонков</span><p>1 — «знакомство» · 2 — «визитка» · 3 — «продажа». Плюс 4–5: FOMO и ещё одна попытка продажи.</p></div>
       </div>
-      <ul class="clean">
-        <li>Трюк: выманить на встречу / видеозвонок — давление растёт</li>
-        <li>Сначала «маленькая сумма на вход», потом раскрутка</li>
-        <li>Отдельный риск: «знакомый / клиент / из чата» с идеей «куда пристроить кэш»</li>
+      <ul class="bullets">
+        <li>Трюк: выманить на встречу или онлайн-звонок — лояльность и давление растут</li>
+        <li>Сначала маленькая сумма «на вход», потом раскрутка</li>
+        <li>Всё чаще звонят в мессенджеры — такие атаки сложнее отследить</li>
       </ul>
+      <div class="foot"><span>ФинПиксель</span><span>13</span></div>
     </section>
 
-    <!-- 14 -->
-    <section class="slide" data-min="1">
-      <p class="eyebrow">Блок 2 · Защита · пирамида</p>
-      <h2>Кто снимает сливки — и кто платит</h2>
-      <div class="grid-4">
-        <div class="card accent"><strong>1 · Учредители</strong><p>Основные сливки. Потом исчезают или получают срок.</p></div>
-        <div class="card"><strong>2 · Ранний вход</strong><p>Могут получить хорошую прибыль.</p></div>
-        <div class="card"><strong>3 · Середина</strong><p>Активная фаза — иногда тоже в плюсе.</p></div>
-        <div class="card"><strong>4 · Поздний вход</strong><p>Десятки тысяч. Основные пострадавшие.</p></div>
-      </div>
-      <p class="lead" style="margin-top:0.75rem">Если доходность «потому что система растёт» и вас просят привести подруг — вы, скорее всего, звено 3 или 4.</p>
-    </section>
-
-    <!-- 15 -->
     <section class="slide" data-min="2">
-      <p class="eyebrow">Блок 2 · Защита · фильтр</p>
+      <div class="rule"></div>
+      <h2>Финансовая пирамида: кто снимает сливки</h2>
+      <div class="grid-4">
+        <div class="card soft"><span class="label">1</span><strong>Учредители</strong><p>Основные сливки. Потом исчезают или получают срок.</p></div>
+        <div class="card"><span class="label">2</span><strong>Ранний вход</strong><p>Могут получить хорошую прибыль.</p></div>
+        <div class="card"><span class="label">3</span><strong>Середина</strong><p>Активная фаза — иногда тоже в плюсе.</p></div>
+        <div class="card"><span class="label">4</span><strong>Поздний вход</strong><p>Десятки тысяч. Основные пострадавшие.</p></div>
+      </div>
+      <p class="quote">Если доходность «потому что система растёт» — вы, скорее всего, звено 3 или 4.</p>
+      <div class="foot"><span>ФинПиксель</span><span>14</span></div>
+    </section>
+
+    <section class="slide" data-min="2">
+      <div class="rule"></div>
       <h2>Инфоцыгане vs нормальные школы</h2>
       <div class="grid-2">
-        <div class="card">
-          <strong class="warn">Инфоцыгане</strong>
-          <p>Нет результата · культ личности · гора скидок и марафонов · мутная юрструктура · акцент на «заработай», не на знаниях.</p>
-        </div>
-        <div class="card accent">
-          <strong class="good">Нормальный формат</strong>
-          <p>Понятные реквизиты · фиксированные цены · чёткая структура · можно объяснить продукт без магии.</p>
-        </div>
+        <div class="card"><span class="label">Инфоцыгане</span><p>Нет вменяемого результата · культ личности · гора скидок и марафонов · мутная юрструктура · акцент на заработке, не на знаниях.</p></div>
+        <div class="card soft"><span class="label">Реальные школы</span><p>Понятные реквизиты · нет культа одного спикера · фиксированные цены · чёткая структура занятий.</p></div>
       </div>
-      <div class="formula" style="margin-top:0.75rem">Жёсткое правило: никаких финрешений после холодного звонка, в чате или «за столом».<br />Сутки паузы. Не можете объяснить своими словами — не покупаете.</div>
+      <div class="callout">Жёсткое правило: никаких финансовых решений после холодного звонка. Не можете объяснить продукт своими словами — не покупаете.</div>
+      <div class="foot"><span>ФинПиксель</span><span>15</span></div>
     </section>
 
-    <!-- 16 -->
     <section class="slide" data-min="1">
-      <p class="eyebrow">Блок 3 · Архитектура</p>
+      <div class="geo" aria-hidden="true"><div class="circle"></div>
+        <div class="v" style="left:50px"></div><div class="v" style="left:95px"></div><div class="v" style="left:140px"></div>
+        <div class="dot lg" style="left:90px; top:120px"></div></div>
+      <div class="title-row"><div class="bar"></div><div>
+        <h1>Архитектура</h1>
+        <p class="lead" style="margin-top:0.7rem">Как собрать систему и не превратить инвестиции в казино</p>
+      </div></div>
+      <div class="foot"><span>ФинПиксель</span><span>16</span></div>
+    </section>
+
+    <section class="slide" data-min="1">
+      <div class="rule"></div>
       <h2>Не с тикера. С жизненной задачи</h2>
       <div class="grid-2">
-        <div class="card">
-          <strong class="warn">Типичный старт</strong>
-          <p>Что растёт? Крипта? Где выше процент? Что купить сегодня с кэша?</p>
-        </div>
-        <div class="card accent">
-          <strong class="good">Правильный старт</strong>
-          <p>Какая цель? Когда деньги понадобятся? Какой просад я переживу без паники?</p>
-        </div>
+        <div class="card"><span class="label">Типичный старт</span><p>Что растёт? Где выше доходность? Что купить сегодня?</p></div>
+        <div class="card soft"><span class="label">Правильный старт</span><p>Какая цель? Когда деньги понадобятся? Какой риск я реально выдержу?</p></div>
       </div>
+      <p class="quote">Портфель начинается не с тикера. Он начинается с жизненной задачи.</p>
+      <div class="foot"><span>ФинПиксель</span><span>17</span></div>
     </section>
 
-    <!-- 17 -->
     <section class="slide" data-min="2">
-      <p class="eyebrow">Блок 3 · Четыре корзины</p>
+      <div class="rule"></div>
       <h2>Одни деньги — разные задачи</h2>
       <div class="grid-4">
-        <div class="card"><strong>Жизнь</strong><p>Сейчас · ликвидность</p></div>
-        <div class="card accent"><strong>Подушка</strong><p>9–12 мес · надёжность</p></div>
-        <div class="card"><strong>Цели</strong><p>1–5 лет · сохранность</p></div>
-        <div class="card"><strong>Рост</strong><p>5+ лет · покупательная сила</p></div>
+        <div class="card"><span class="label">01</span><strong>Деньги жизни</strong><p>Сейчас · ликвидность</p></div>
+        <div class="card soft"><span class="label">02</span><strong>Подушка</strong><p>3–12 мес · надёжность и доступ</p></div>
+        <div class="card"><span class="label">03</span><strong>Деньги цели</strong><p>1–5 лет · сохранность</p></div>
+        <div class="card"><span class="label">04</span><strong>Капитал роста</strong><p>5+ лет · покупательная сила</p></div>
       </div>
-      <p class="lead" style="margin-top:0.75rem">Противоречие — не иметь разные активы. Противоречие — держать всё в одном риске.</p>
-      <div class="formula" style="margin-top:0.5rem">Порядок нельзя перепрыгивать: учёт → резерв → цели → инвестируемый капитал → риск-зона</div>
+      <p class="quote">Противоречие — не иметь разные активы. Противоречие — держать все деньги в одном риске.</p>
+      <div class="foot"><span>ФинПиксель</span><span>18</span></div>
     </section>
 
-    <!-- 18 -->
     <section class="slide" data-min="2">
-      <p class="eyebrow">Блок 3 · Универсальная шкала</p>
-      <h2>Три «покемона» в любом активе</h2>
+      <div class="rule"></div>
+      <h2>Порядок, который нельзя перепрыгивать</h2>
+      <div class="ladder">
+        <div class="rung"><span>1</span>Доход и контроль расходов</div>
+        <div class="rung"><span>2</span>Резерв</div>
+        <div class="rung"><span>3</span>Цели на 1–5 лет</div>
+        <div class="rung"><span>4</span>Инвестируемый капитал</div>
+        <div class="rung"><span>5</span>Рискованные идеи и активное управление</div>
+      </div>
+      <div class="callout">Деньги подушки, ипотеки, лечения и ближайшей цели нельзя ставить на риск.</div>
+      <div class="foot"><span>ФинПиксель</span><span>19</span></div>
+    </section>
+
+    <section class="slide" data-min="2">
+      <div class="rule"></div>
+      <h2>В каждой инвестиции — три уровня сложности</h2>
       <div class="grid-3">
-        <div class="card accent"><strong>I · База</strong><p>Понятно и спокойно: вклад, ОФЗ, крупные эмитенты, купи-и-держи.</p></div>
-        <div class="card"><strong>II · Анализ</strong><p>Нужно разбираться: корпоративные облигации, отбор акций, объект с расчётом.</p></div>
-        <div class="card"><strong>III · Активное</strong><p>Дорого ошибаться: ВДО, фьючерсы, сложная недвижка, «схемы из чата».</p></div>
+        <div class="card soft"><span class="label">I · База</span><strong>Понятная логика</strong><p>Минимум операционки, дисциплина. ОФЗ, купи-и-держи, готовый объект.</p></div>
+        <div class="card"><span class="label">II · Анализ</span><strong>Больше решений</strong><p>Корпоративные облигации, активный отбор, расчёт объекта.</p></div>
+        <div class="card"><span class="label">III · Активное</span><strong>Цена ошибки выше</strong><p>ВДО, фьючерсы, сложная недвижка, тактические сделки.</p></div>
       </div>
-      <p class="quote accent-text" style="margin-top:0.75rem">Третий покемон не круче. Он сложнее.</p>
+      <p class="quote">Третий уровень не лучше. Он сложнее.</p>
+      <div class="foot"><span>ФинПиксель</span><span>20</span></div>
     </section>
 
-    <!-- 19 -->
     <section class="slide" data-min="2">
-      <p class="eyebrow">Блок 3 · Облигации и акции</p>
-      <h2>Высокий купон — счёт за риск</h2>
+      <div class="rule"></div>
+      <h2>Облигации и акции — одна шкала</h2>
       <div class="grid-2">
-        <div class="card">
-          <strong>Облигации</strong>
-          <p>I ОФЗ / крупные → II корпоративные → III ВДО. Длинная бумага на деньги, которые могут понадобиться через месяц — классическая ошибка.</p>
-        </div>
-        <div class="card">
-          <strong>Акции</strong>
-          <p>I купи и держи → II активный отбор → III фьючерсы. Главный актив базы — не мешать времени. Фьючерсы ускоряют ошибку, не доходность.</p>
-        </div>
+        <div class="card"><span class="label">Облигации</span><p>I ОФЗ / крупные эмитенты → II корпоративные → III ВДО. Высокий купон — счёт за риск. Длинная бумага на короткие деньги — классическая ошибка.</p></div>
+        <div class="card soft"><span class="label">Акции</span><p>I купи и держи → II активный отбор / 2–3 эшелон → III фьючерсы. Главный актив базы — не мешать времени. Фьючерсы ускоряют ошибку, не доходность.</p></div>
       </div>
-      <p class="lead">Вы не обязаны дорастать до третьего уровня. Сначала — не терять. Потом — не терять лишнее.</p>
+      <p class="lead">Вы не обязаны дорастать до третьего уровня. Сначала — не терять всё. Потом — не терять лишнее.</p>
+      <div class="foot"><span>ФинПиксель</span><span>21</span></div>
     </section>
 
-    <!-- 20 -->
     <section class="slide" data-min="1">
-      <p class="eyebrow">Блок 3 · Недвижимость в двух фразах</p>
+      <div class="rule"></div>
       <h2>«Квадратный метр дорожает» — не гипотеза</h2>
-      <ul class="clean">
+      <ul class="bullets">
         <li>Покупают не стены — спрос, арендатора, договор и сценарий выхода</li>
         <li>Чистая доходность = аренда − простой − коммуналка − налоги − ремонт − комиссии</li>
-        <li>Нет подушки / весь капитал в одном объекте / деньги нужны через 1–3 года → часто лучший объект тот, который вы не купили</li>
+        <li>Нет резерва / весь капитал в одном объекте / деньги нужны через 1–3 года → часто лучший объект тот, который вы не купили</li>
       </ul>
+      <div class="foot"><span>ФинПиксель</span><span>22</span></div>
     </section>
 
-    <!-- 21 -->
+    <section class="slide" data-min="1">
+      <div class="geo" aria-hidden="true"><div class="circle"></div>
+        <div class="v" style="left:50px"></div><div class="v" style="left:95px"></div><div class="v" style="left:140px"></div>
+        <div class="dot lg" style="left:90px; top:120px"></div></div>
+      <div class="title-row"><div class="bar"></div><div>
+        <h1>Конструкция</h1>
+        <p class="lead" style="margin-top:0.7rem">Вклады · ОФЗ · корпоративные облигации · валюта · план</p>
+      </div></div>
+      <div class="foot"><span>ФинПиксель</span><span>23</span></div>
+    </section>
+
     <section class="slide" data-min="2">
-      <p class="eyebrow">Блок 4 · Конструкция</p>
+      <div class="rule"></div>
       <h2>Что реально можно инвестировать</h2>
-      <div class="formula">Свободный капитал = накопления − резерв − цели до 3 лет − дорогие долги</div>
-      <div class="grid-3" style="margin-top:0.85rem">
-        <div class="card"><strong>Вклад</strong><p>Подушка и короткие цели. Сюда уходит % с хороших смен.</p></div>
-        <div class="card"><strong>Валюта</strong><p>Будущие валютные расходы и диверсификация — не паника после скачка курса.</p></div>
-        <div class="card accent"><strong>Облигации</strong><p>Срок, поток, консервативная часть. Это не «депозит с красивым названием».</p></div>
-      </div>
-      <p class="lead">После формулы осталось мало? Не провал. Нормальная точка старта — особенно пока копите подушку.</p>
-    </section>
-
-    <!-- 22 -->
-    <section class="slide" data-min="2">
-      <p class="eyebrow">Блок 4 · Пять вопросов</p>
-      <h2>Перед любой облигацией (и любой «идеей»)</h2>
-      <ol class="steps">
-        <li>Кто занимает деньги / кому я их отдаю?</li>
-        <li>Когда должен вернуть?</li>
-        <li>Какая доходность к погашению — не просто «процент»?</li>
-        <li>Что будет, если эмитент / схема не заплатит?</li>
-        <li>Можно ли быстро выйти, если деньги понадобились?</li>
-      </ol>
-      <p class="lead">Размер позиции важнее уверенности: чем хуже переживаете ошибку — тем меньше ставка.</p>
-    </section>
-
-    <!-- 23 -->
-    <section class="slide" data-min="1">
-      <p class="eyebrow">Блок 4 · Сложный процент</p>
-      <h2>Без магии: взносы → реинвест → время</h2>
+      <div class="callout">Свободный капитал = накопления − резерв − цели до 3 лет − дорогие долги</div>
       <div class="grid-3">
-        <div class="card accent"><strong>01</strong><p>С хороших месяцев — регулярно добавлять</p></div>
-        <div class="card accent"><strong>02</strong><p>Не проедать купоны и проценты</p></div>
-        <div class="card accent"><strong>03</strong><p>Давать времени работать</p></div>
+        <div class="card"><span class="label">Вклад</span><strong>Резерв и короткие цели</strong><p>Не решает все финансовые задачи сразу.</p></div>
+        <div class="card"><span class="label">Валюта</span><strong>Расходы и диверсификация</strong><p>Не паническая покупка после скачка курса.</p></div>
+        <div class="card soft"><span class="label">Облигации</span><strong>Срок и денежный поток</strong><p>Это не депозит с красивым названием.</p></div>
       </div>
-      <p class="lead" style="margin-top:0.75rem">Плохой месяц — не ломает систему, если подушка и % с хороших уже настроены. Когда рынок дёргается: деньги нужны раньше? изменился инструмент или только цена в приложении?</p>
+      <p class="quote">Если после формулы осталось мало — это не провал. Это нормальная точка старта.</p>
+      <div class="foot"><span>ФинПиксель</span><span>24</span></div>
     </section>
 
-    <!-- 24 -->
-    <section class="slide" data-min="1">
-      <p class="eyebrow">Итог · Личный регламент</p>
-      <h2>Не советы. Правила под вашу жизнь</h2>
-      <ul class="two-col-list">
-        <li>Мои цели и сроки</li>
-        <li>Размер резерва (9–12 мес.)</li>
-        <li>% с хорошей смены → в систему</li>
-        <li>Что считаю базовыми активами</li>
-        <li>Где заканчивается допустимый риск</li>
-        <li>Максимальная доля одной идеи</li>
-        <li>Что заставит продать / отказать</li>
-        <li>Дата пересмотра структуры</li>
-      </ul>
-    </section>
-
-    <!-- 25 -->
     <section class="slide" data-min="2">
-      <p class="eyebrow">Домашнее задание</p>
-      <h2>Семь действий после лекции</h2>
+      <div class="rule"></div>
+      <h2>Пять вопросов перед покупкой</h2>
       <ol class="steps">
-        <li>Посчитать средний доход за 3–6 месяцев (кэш + карта)</li>
-        <li>Разложить: жизнь / работа / кайф / резерв / цели / рост</li>
-        <li>Задать % с хорошей смены → сразу на отдельный счёт</li>
-        <li>Проверить подушку: хватает ли на 9–12 мес. обязательных</li>
-        <li>Выписать всё, что «уже вложено» — в одну честную таблицу</li>
-        <li>Лимит на самую рискованную идею (или ноль, пока нет резерва)</li>
-        <li>Сутки паузы перед любым «вложи / купи / занеси» — и правило: не покупаю то, что не могу объяснить</li>
+        <li>Кто занимает деньги?</li>
+        <li>Когда должен вернуть?</li>
+        <li>Какая доходность к погашению — не просто купон?</li>
+        <li>Что у эмитента с долгом и деньгами?</li>
+        <li>Можно ли быстро выйти из бумаги?</li>
       </ol>
+      <div class="callout">Размер позиции важнее уверенности: чем хуже переживаете ошибку — тем меньше ставка.</div>
+      <div class="foot"><span>ФинПиксель</span><span>25</span></div>
     </section>
 
-    <!-- 26 -->
+    <section class="slide" data-min="2">
+      <div class="rule"></div>
+      <h2>Сложный процент и правила на год</h2>
+      <div class="grid-3">
+        <div class="card soft"><span class="label">01</span><strong>Регулярно добавлять</strong><p>Взносы тянут первые годы</p></div>
+        <div class="card soft"><span class="label">02</span><strong>Не проедать купоны</strong><p>Реинвест работает только так</p></div>
+        <div class="card soft"><span class="label">03</span><strong>Дать времени</strong><p>Не бросать на середине пути</p></div>
+      </div>
+      <ul class="bullets">
+        <li>Разложить деньги по корзинам · проверить резерв · выписать цели на 1–3 года</li>
+        <li>Зафиксировать правила покупки и продажи · дату пересмотра</li>
+        <li>Не покупать ничего нового, пока не можете объяснить: зачем, на какой срок, с каким риском</li>
+      </ul>
+      <div class="foot"><span>ФинПиксель</span><span>26</span></div>
+    </section>
+
     <section class="slide" data-min="1">
-      <p class="eyebrow">ФинПиксель</p>
-      <h2 class="quote">Не надо быть гением рынка.<br />Надо перестать делать дорогие глупости.</h2>
-      <p class="lead" style="margin-top:1rem">Сначала — не терять. Потом — зарабатывать на капитале. Нормальное своё лучше идеального чужого.</p>
-      <p class="timing">Алексей Кричевский · krichevskiy.ru/finpixel</p>
+      <div class="geo" aria-hidden="true"><div class="circle"></div>
+        <div class="v" style="left:50px"></div><div class="v" style="left:95px"></div><div class="v" style="left:140px"></div>
+        <div class="dot lg" style="left:90px; top:120px"></div></div>
+      <div class="title-row"><div class="bar"></div><div>
+        <h2 style="max-width:18ch">Не надо быть гением рынка.<br />Надо перестать делать дорогие глупости.</h2>
+        <p class="quote" style="margin-top:1.2rem">Сначала — не терять. Потом — зарабатывать. Нормальное своё лучше идеального чужого.</p>
+        <p class="meta" style="margin-top:1.5rem">Алексей Кричевский · krichevskiy.ru/finpixel</p>
+      </div></div>
+      <div class="foot"><span>ФинПиксель</span><span>27</span></div>
     </section>
-
   </div>
-
-  <div class="footer-bar">
-    <span id="counter">1 / 26</span>
-    <div class="progress"><span id="bar"></span></div>
-    <span id="clock">~40 мин</span>
-  </div>
-
   <script>
     const slides = [...document.querySelectorAll(".slide")];
     let i = 0;
-
     function show(n) {
       i = Math.max(0, Math.min(slides.length - 1, n));
       slides.forEach((s, idx) => s.classList.toggle("active", idx === i));
-      document.getElementById("counter").textContent = `${i + 1} / ${slides.length}`;
       document.getElementById("bar").style.width = `${((i + 1) / slides.length) * 100}%`;
-      const remaining = slides.slice(i).reduce((sum, s) => sum + Number(s.dataset.min || 2), 0);
-      document.getElementById("clock").textContent = `~${remaining} мин осталось`;
     }
-
     function next() { show(i + 1); }
     function prev() { show(i - 1); }
-
     document.addEventListener("keydown", (e) => {
-      if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) {
-        e.preventDefault();
-        next();
-      } else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(e.key)) {
-        e.preventDefault();
-        prev();
-      } else if (e.key === "Home") {
-        show(0);
-      } else if (e.key === "End") {
-        show(slides.length - 1);
-      } else if (e.key.toLowerCase() === "f") {
+      if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) { e.preventDefault(); next(); }
+      else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); prev(); }
+      else if (e.key === "Home") show(0);
+      else if (e.key === "End") show(slides.length - 1);
+      else if (e.key.toLowerCase() === "f") {
         if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
         else document.exitFullscreen?.();
       }
     });
-
     let touchX = null;
     document.addEventListener("touchstart", (e) => { touchX = e.changedTouches[0].screenX; });
     document.addEventListener("touchend", (e) => {
@@ -712,13 +453,10 @@
       if (Math.abs(dx) > 40) (dx < 0 ? next : prev)();
       touchX = null;
     });
-
     document.addEventListener("click", (e) => {
-      if (e.target.closest(".hint")) return;
-      if (e.clientX > window.innerWidth * 0.55) next();
-      else prev();
+      if (e.target.closest(".chrome")) return;
+      if (e.clientX > window.innerWidth * 0.55) next(); else prev();
     });
-
     show(0);
   </script>
 </body>

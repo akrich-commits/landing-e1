@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ФинПиксель — лекция 30–40 мин</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #12151a;
+      --bg-elev: #1a1f27;
+      --ink: #f2efe8;
+      --muted: #9aa3b2;
+      --line: rgba(242, 239, 232, 0.12);
+      --accent: #d4a017;
+      --accent-soft: rgba(212, 160, 23, 0.16);
+      --good: #6fbf9a;
+      --warn: #e07a5f;
+      --slide-pad: clamp(1.5rem, 4vw, 4.5rem);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 60% at 10% -10%, rgba(212, 160, 23, 0.14), transparent 55%),
+        radial-gradient(ellipse 70% 50% at 100% 100%, rgba(111, 191, 154, 0.08), transparent 50%),
+        linear-gradient(180deg, transparent, rgba(0,0,0,0.25));
+      z-index: 0;
+    }
+
+    .deck {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      width: 100%;
+    }
+
+    .slide {
+      display: none;
+      height: 100%;
+      padding: var(--slide-pad);
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.25rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .slide.active { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .eyebrow {
+      font-size: 0.85rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    h1, h2, h3 {
+      font-family: Geologica, sans-serif;
+      font-weight: 600;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+
+    h1 { font-size: clamp(2.4rem, 6vw, 4.4rem); max-width: 16ch; }
+    h2 { font-size: clamp(1.8rem, 4.2vw, 3.1rem); max-width: 22ch; }
+    h3 { font-size: clamp(1.2rem, 2.4vw, 1.6rem); }
+
+    .lead {
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      color: var(--muted);
+      max-width: 42ch;
+      line-height: 1.5;
+    }
+
+    .brand {
+      font-family: Geologica, sans-serif;
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .brand span { color: var(--accent); }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.85rem;
+      width: 100%;
+    }
+
+    @media (max-width: 800px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      h1 { max-width: none; }
+    }
+
+    .card {
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.15rem 1.25rem;
+    }
+
+    .card strong {
+      display: block;
+      font-family: Geologica, sans-serif;
+      margin-bottom: 0.35rem;
+      font-size: 1.05rem;
+    }
+
+    .card p, .card li {
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.45;
+    }
+
+    .card.accent {
+      background: var(--accent-soft);
+      border-color: rgba(212, 160, 23, 0.35);
+    }
+
+    ul.clean {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 0.5rem;
+    }
+
+    ul.clean li {
+      position: relative;
+      padding-left: 1.35rem;
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      line-height: 1.4;
+      color: var(--ink);
+    }
+
+    ul.clean li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 2px;
+      background: var(--accent);
+    }
+
+    .big-answer {
+      font-family: Geologica, sans-serif;
+      font-size: clamp(3.5rem, 12vw, 8rem);
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.04em;
+    }
+
+    .formula {
+      font-family: Geologica, sans-serif;
+      font-size: clamp(1.15rem, 2.5vw, 1.7rem);
+      background: var(--bg-elev);
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.25rem;
+      border-radius: 0 12px 12px 0;
+      line-height: 1.4;
+    }
+
+    .steps {
+      counter-reset: step;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .steps li {
+      list-style: none;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.9rem;
+      align-items: start;
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      line-height: 1.4;
+    }
+
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step, decimal-leading-zero);
+      font-family: Geologica, sans-serif;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.95em;
+      min-width: 2ch;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(212, 160, 23, 0.4);
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.25rem;
+      background: linear-gradient(transparent, rgba(18, 21, 26, 0.92) 40%);
+      font-size: 0.8rem;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .footer-bar .progress {
+      width: min(220px, 30vw);
+      height: 3px;
+      background: var(--line);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .footer-bar .progress > span {
+      display: block;
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    .hint {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 5;
+      font-size: 0.75rem;
+      color: var(--muted);
+      opacity: 0.7;
+    }
+
+    .quote {
+      font-family: Geologica, sans-serif;
+      font-size: clamp(1.4rem, 3.2vw, 2.2rem);
+      max-width: 22ch;
+      line-height: 1.25;
+    }
+
+    .muted { color: var(--muted); }
+    .accent-text { color: var(--accent); }
+    .good { color: var(--good); }
+    .warn { color: var(--warn); }
+
+    .two-col-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 1.5rem;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .two-col-list li {
+      list-style: none;
+      padding: 0.55rem 0.7rem;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.98rem;
+      color: var(--ink);
+    }
+
+    @media (max-width: 700px) {
+      .two-col-list { grid-template-columns: 1fr; }
+    }
+
+    .timing {
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+  <div class="hint">← → · пробел · F — полный экран</div>
+
+  <div class="deck" id="deck">
+
+    <!-- 1 -->
+    <section class="slide active" data-min="1">
+      <p class="eyebrow">Курс финансовой грамотности · сжатая лекция</p>
+      <p class="brand">Фин<span>Пиксель</span></p>
+      <p class="lead">Бюджет → защита → архитектура капитала → рабочая конструкция. Без воды, на 30–40 минут.</p>
+      <p class="timing">Алексей Кричевский · krichevskiy.ru/finpixel</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="slide" data-min="2">
+      <p class="eyebrow">Главный вопрос</p>
+      <h2>Как получить пассивный доход 500 000 ₽ — легко, без времени и без капитала?</h2>
+    </section>
+
+    <!-- 3 -->
+    <section class="slide" data-min="1">
+      <p class="big-answer">Никак.</p>
+      <p class="lead">Забудьте про «пассивный доход». Его в бытовом смысле не существует. Есть капитал, дисциплина и правила.</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="slide" data-min="2">
+      <p class="eyebrow">Карта лекции</p>
+      <h2>Четыре слоя одной системы</h2>
+      <div class="grid-4">
+        <div class="card accent"><span class="tag">01 · 8 мин</span><strong>Контроль</strong><p>Бюджет, утечки, подушка</p></div>
+        <div class="card"><span class="tag">02 · 5 мин</span><strong>Защита</strong><p>Инфляция, скам, фильтр</p></div>
+        <div class="card"><span class="tag">03 · 12 мин</span><strong>Архитектура</strong><p>Задачи денег и уровни риска</p></div>
+        <div class="card"><span class="tag">04 · 10 мин</span><strong>Конструкция</strong><p>Вклады, ОФЗ, план на год</p></div>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="slide" data-min="2">
+      <p class="eyebrow">Блок 1 · Контроль</p>
+      <h2>Финансовая грамотность — не про аскезу</h2>
+      <div class="grid-2">
+        <div class="card">
+          <strong>На практике</strong>
+          <p>Как двигаться к денежному спокойствию, переживать кризисы и снижать стресс — а не только «знать термины».</p>
+        </div>
+        <div class="card accent">
+          <strong>Фокус смещён</strong>
+          <p>Невозможно бесконечно резать косты. Рано или поздно нужен рост дохода. Одним хватает 100 тыс., другим мало миллиона — дело в управлении, не в цифре.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="slide" data-min="3">
+      <p class="eyebrow">Блок 1 · Бюджет</p>
+      <h2>Два шага, которые открывают глаза</h2>
+      <ol class="steps">
+        <li><span><strong>Свести 3–6 месяцев</strong> доходов и расходов домохозяйства. Обязательные vs необязательные. Обычно вскрывается неприятное — и это хорошо.</span></li>
+        <li><span><strong>Дневник затрат.</strong> Кофе 300 ₽ × 5 дней × 4 недели × 12 = <span class="accent-text">72 000 ₽ в год</span>. Мелочь кумулятивно бьёт сильнее «крупных решений».</span></li>
+      </ol>
+      <p class="lead" style="margin-top:0.5rem">Инструмент любой: банковское приложение, своя бухгалтерия или блокнот. Важна регулярность, не красота таблицы.</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="slide" data-min="2">
+      <p class="eyebrow">Блок 1 · Где утекает</p>
+      <h2>Типичные дыры — без морали</h2>
+      <ul class="two-col-list">
+        <li>Подписки, которыми не пользуетесь</li>
+        <li>Доставка и кафе без плана питания</li>
+        <li>Маркетплейсы «по настроению»</li>
+        <li>«Я заслужил» — крупные разовые покупки</li>
+        <li>Кредитки и рассрочки как «не деньги»</li>
+        <li>Такси вместо продуманной логистики</li>
+        <li>Эмоциональные траты после стресса</li>
+        <li>Списания, о которых узнаёте из выписки</li>
+      </ul>
+    </section>
+
+    <!-- 8 -->
+    <section class="slide" data-min="3">
+      <p class="eyebrow">Блок 1 · Подушка</p>
+      <h2>Резерв — первый актив системы</h2>
+      <div class="formula">Ориентир: 6 месяцев обязательных расходов + 20%.<br />Нестабильный доход → ближе к 12 месяцам.</div>
+      <div class="grid-3" style="margin-top:0.75rem">
+        <div class="card"><strong>01 Цель</strong><p>Конкретная сумма и срок</p></div>
+        <div class="card"><strong>02 Учёт</strong><p>Регулярная бухгалтерия домохозяйства</p></div>
+        <div class="card"><strong>03 Правило</strong><p>«Сначала заплатить себе» + рост дохода ≥ инфляции</p></div>
+      </div>
+      <p class="lead">Подушка лежит отдельно, ликвидна и почти не колеблется. Она не обязана быть красивой. Она обязана быть.</p>
+    </section>
+
+    <!-- 9 -->
+    <section class="slide" data-min="2">
+      <p class="eyebrow">Блок 1 · Три уровня</p>
+      <h2>Безопасность → независимость → свобода</h2>
+      <div class="grid-3">
+        <div class="card accent"><strong>Безопасность</strong><p>Резерв 3–12 мес. Пережить потерю дохода без долгов и паники.</p></div>
+        <div class="card"><strong>Независимость</strong><p>~10–15 годовых бюджетов в активах. Доход с капитала ≈ обязательные расходы.</p></div>
+        <div class="card"><strong>Свобода</strong><p>Капитал покрывает желаемый уровень жизни, а не минимум. Деньги перестают ограничивать решения.</p></div>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section class="slide" data-min="2">
+      <p class="eyebrow">Блок 1 · Психология</p>
+      <h2>Установки дороже инструментов</h2>
+      <ul class="clean">
+        <li>«Сначала поднять доход — потом система» → часто никогда не наступает «потом»</li>
+        <li>«Инвестиции только при лишних деньгах» → лишних не бывает без правил</li>
+        <li>«Ошибка = катастрофа» → парализует и оставляет в инфляции</li>
+        <li>Кумулятивный эффект приходит позже ожидаемого — план нужен и на плюс, и на минус</li>
+      </ul>
+      <p class="lead">Слона едят по кусочкам. Нарушение закона Паркинсона (расходы растут вместе с доходом) — главный буст капитала.</p>
+    </section>
+
+    <!-- 11 -->
+    <section class="slide" data-min="4">
+      <p class="eyebrow">Блок 2 · Защита</p>
+      <h2>Сначала учимся не терять</h2>
+      <div class="grid-2">
+        <div class="card">
+          <strong>Как ловят в 2026</strong>
+          <p>Псевдоброкеры, холодные звонки, офисы в БЦ, «малая сумма на вход», FOMO, пирамиды, инфоцыгане.</p>
+        </div>
+        <div class="card accent">
+          <strong>Жёсткое правило</strong>
+          <p>Никаких финансовых решений после холодного звонка. Чек-лист безопасности: 5 минут — и видно, продукт это или ловушка.</p>
+        </div>
+      </div>
+      <ul class="clean">
+        <li>Доходность без понятного риска — красный флаг</li>
+        <li>Давление срочности и «только сегодня» — красный флаг</li>
+        <li>Не можете объяснить инструмент своими словами — не покупаете</li>
+      </ul>
+    </section>
+
+    <!-- 12 -->
+    <section class="slide" data-min="2">
+      <p class="eyebrow">Блок 3 · Архитектура</p>
+      <h2>Не с тикера. С жизненной задачи</h2>
+      <div class="grid-2">
+        <div class="card">
+          <strong class="warn">Типичный старт</strong>
+          <p>Что растёт? Где выше доходность? Что купить сегодня?</p>
+        </div>
+        <div class="card accent">
+          <strong class="good">Правильный старт</strong>
+          <p>Какая цель? Когда деньги понадобятся? Какой риск я реально выдержу?</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 -->
+    <section class="slide" data-min="3">
+      <p class="eyebrow">Блок 3 · Четыре корзины</p>
+      <h2>Одни деньги — разные задачи</h2>
+      <div class="grid-4">
+        <div class="card"><strong>Жизнь</strong><p>Сейчас · ликвидность</p></div>
+        <div class="card accent"><strong>Подушка</strong><p>3–12 мес · надёжность</p></div>
+        <div class="card"><strong>Цели</strong><p>1–5 лет · сохранность</p></div>
+        <div class="card"><strong>Рост</strong><p>5+ лет · покупательная сила</p></div>
+      </div>
+      <p class="lead" style="margin-top:0.75rem">Противоречие — не иметь разные активы. Противоречие — держать всё в одном риске.</p>
+      <div class="formula" style="margin-top:0.5rem">Порядок нельзя перепрыгивать: доход/контроль → резерв → цели → инвестируемый капитал → риск-зона</div>
+    </section>
+
+    <!-- 14 -->
+    <section class="slide" data-min="3">
+      <p class="eyebrow">Блок 3 · Универсальная шкала</p>
+      <h2>Три «покемона» в любом активе</h2>
+      <div class="grid-3">
+        <div class="card accent"><strong>I · База</strong><p>Понятная логика, минимум операционки, дисциплина. ОФЗ, купи-и-держи, готовый объект.</p></div>
+        <div class="card"><strong>II · Анализ</strong><p>Больше переменных и ответственности. Корпоративные облигации, активный отбор, дисбаланс цены/спроса.</p></div>
+        <div class="card"><strong>III · Активное</strong><p>Сложность и цена ошибки. ВДО, фьючерсы, посутка/нарезка/реконцепция.</p></div>
+      </div>
+      <p class="quote accent-text" style="margin-top:0.75rem">Третий покемон не лучше. Он сложнее.</p>
+    </section>
+
+    <!-- 15 -->
+    <section class="slide" data-min="3">
+      <p class="eyebrow">Блок 3 · Облигации и акции</p>
+      <h2>Высокий купон — счёт за риск</h2>
+      <div class="grid-2">
+        <div class="card">
+          <strong>Облигации</strong>
+          <p>I ОФЗ / крупные эмитенты → II корпоративные → III ВДО. Длинная бумага на короткие деньги — классическая ошибка. До погашения цена гуляет.</p>
+        </div>
+        <div class="card">
+          <strong>Акции</strong>
+          <p>I купи и держи → II активная торговля / 2–3 эшелон → III фьючерсы. Главный актив базы — способность не мешать времени. Фьючерсы ускоряют ошибку, не доходность.</p>
+        </div>
+      </div>
+      <p class="lead">Вы не обязаны эволюционировать до третьего уровня. Сначала — не терять всё. Потом — не терять лишнее.</p>
+    </section>
+
+    <!-- 16 -->
+    <section class="slide" data-min="2">
+      <p class="eyebrow">Блок 3 · Недвижимость в двух фразах</p>
+      <h2>«Квадратный метр дорожает» — не гипотеза</h2>
+      <ul class="clean">
+        <li>Покупают не стены — трафик, арендатора, договор и сценарий выхода</li>
+        <li>Чистая доходность = аренда − простой − коммуналка − налоги − ремонт − комиссии</li>
+        <li>Нет резерва / весь капитал в одном объекте / деньги нужны через 1–3 года → часто лучший объект тот, который вы не купили</li>
+      </ul>
+    </section>
+
+    <!-- 17 -->
+    <section class="slide" data-min="3">
+      <p class="eyebrow">Блок 4 · Конструкция</p>
+      <h2>Что реально можно инвестировать</h2>
+      <div class="formula">Свободный капитал = накопления − резерв − цели до 3 лет − дорогие долги</div>
+      <div class="grid-3" style="margin-top:0.85rem">
+        <div class="card"><strong>Вклад</strong><p>Резерв и короткие цели. Не решает все задачи сразу.</p></div>
+        <div class="card"><strong>Валюта</strong><p>Будущие валютные расходы и диверсификация — не паническая покупка после скачка.</p></div>
+        <div class="card accent"><strong>Облигации</strong><p>Срок, поток, консервативная часть. Это не депозит с красивым названием.</p></div>
+      </div>
+      <p class="lead">Если после формулы осталось мало — это не провал. Это нормальная точка старта.</p>
+    </section>
+
+    <!-- 18 -->
+    <section class="slide" data-min="3">
+      <p class="eyebrow">Блок 4 · Пять вопросов</p>
+      <h2>Перед любой облигацией</h2>
+      <ol class="steps">
+        <li>Кто занимает деньги?</li>
+        <li>Когда должен вернуть?</li>
+        <li>Какая доходность к погашению — не просто купон?</li>
+        <li>Что у эмитента с долгом и деньгами?</li>
+        <li>Можно ли быстро выйти из бумаги?</li>
+      </ol>
+      <p class="lead">Размер позиции важнее уверенности: чем хуже переживаете ошибку — тем меньше ставка.</p>
+    </section>
+
+    <!-- 19 -->
+    <section class="slide" data-min="2">
+      <p class="eyebrow">Блок 4 · Сложный процент</p>
+      <h2>Без магии: взносы → реинвест → время</h2>
+      <div class="grid-3">
+        <div class="card accent"><strong>01</strong><p>Регулярно добавлять</p></div>
+        <div class="card accent"><strong>02</strong><p>Не проедать купоны и проценты</p></div>
+        <div class="card accent"><strong>03</strong><p>Давать времени работать</p></div>
+      </div>
+      <p class="lead" style="margin-top:0.75rem">В первые годы тянут пополнения. Потом помогает капитал — если не бросить на середине. Когда рынок дёргается: деньги нужны раньше? изменился инструмент или только цена? нарушен план или просто плохой день в приложении?</p>
+    </section>
+
+    <!-- 20 -->
+    <section class="slide" data-min="3">
+      <p class="eyebrow">Итог · Личный регламент</p>
+      <h2>Не советы. Правила</h2>
+      <ul class="two-col-list">
+        <li>Мои цели и сроки</li>
+        <li>Размер резерва</li>
+        <li>Что считаю базовыми активами</li>
+        <li>Где заканчивается допустимый риск</li>
+        <li>Максимальная доля одной идеи</li>
+        <li>Инструменты, которые пока не трогаю</li>
+        <li>Что заставит продать</li>
+        <li>Дата пересмотра структуры</li>
+      </ul>
+    </section>
+
+    <!-- 21 -->
+    <section class="slide" data-min="2">
+      <p class="eyebrow">Домашнее задание</p>
+      <h2>Семь действий после лекции</h2>
+      <ol class="steps">
+        <li>Разложить деньги: жизнь / резерв / цели / рост</li>
+        <li>Выписать все активы в одну честную таблицу</li>
+        <li>Назначить цель и срок каждой сумме</li>
+        <li>Проверить размер подушки (6 мес + 20%)</li>
+        <li>Поставить лимит на самую рискованную идею</li>
+        <li>Не открывать новых сделок до инвентаризации</li>
+        <li>Выбрать дату пересмотра — и не покупать то, что не можете объяснить: зачем, на какой срок, с каким риском</li>
+      </ol>
+    </section>
+
+    <!-- 22 -->
+    <section class="slide" data-min="1">
+      <p class="eyebrow">ФинПиксель</p>
+      <h2 class="quote">Не надо быть гением рынка.<br />Надо перестать делать дорогие глупости.</h2>
+      <p class="lead" style="margin-top:1rem">Сначала — не терять. Потом — зарабатывать. Нормальное своё лучше идеального чужого.</p>
+      <p class="timing">Алексей Кричевский · krichevskiy.ru/finpixel</p>
+    </section>
+
+  </div>
+
+  <div class="footer-bar">
+    <span id="counter">1 / 22</span>
+    <div class="progress"><span id="bar"></span></div>
+    <span id="clock">~40 мин</span>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll(".slide")];
+    let i = 0;
+
+    function show(n) {
+      i = Math.max(0, Math.min(slides.length - 1, n));
+      slides.forEach((s, idx) => s.classList.toggle("active", idx === i));
+      document.getElementById("counter").textContent = `${i + 1} / ${slides.length}`;
+      document.getElementById("bar").style.width = `${((i + 1) / slides.length) * 100}%`;
+      const remaining = slides.slice(i).reduce((sum, s) => sum + Number(s.dataset.min || 2), 0);
+      document.getElementById("clock").textContent = `~${remaining} мин осталось`;
+    }
+
+    function next() { show(i + 1); }
+    function prev() { show(i - 1); }
+
+    document.addEventListener("keydown", (e) => {
+      if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) {
+        e.preventDefault();
+        next();
+      } else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(e.key)) {
+        e.preventDefault();
+        prev();
+      } else if (e.key === "Home") {
+        show(0);
+      } else if (e.key === "End") {
+        show(slides.length - 1);
+      } else if (e.key.toLowerCase() === "f") {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+        else document.exitFullscreen?.();
+      }
+    });
+
+    let touchX = null;
+    document.addEventListener("touchstart", (e) => { touchX = e.changedTouches[0].screenX; });
+    document.addEventListener("touchend", (e) => {
+      if (touchX == null) return;
+      const dx = e.changedTouches[0].screenX - touchX;
+      if (Math.abs(dx) > 40) (dx < 0 ? next : prev)();
+      touchX = null;
+    });
+
+    document.addEventListener("click", (e) => {
+      if (e.target.closest(".hint")) return;
+      if (e.clientX > window.innerWidth * 0.55) next();
+      else prev();
+    });
+
+    show(0);
+  </script>
+</body>
+</html>

@@ -53,11 +53,12 @@
     .slide {
       display: none;
       height: 100%;
+      width: min(1180px, 100%);
       padding: var(--slide-pad);
+      padding-bottom: 3.5rem;
       flex-direction: column;
       justify-content: center;
       gap: 1.25rem;
-      max-width: 1200px;
       margin: 0 auto;
       animation: fadeIn 0.35s ease;
     }
@@ -84,14 +85,14 @@
       letter-spacing: -0.02em;
     }
 
-    h1 { font-size: clamp(2.4rem, 6vw, 4.4rem); max-width: 16ch; }
-    h2 { font-size: clamp(1.8rem, 4.2vw, 3.1rem); max-width: 22ch; }
+    h1 { font-size: clamp(2.4rem, 6vw, 4.4rem); max-width: 18ch; }
+    h2 { font-size: clamp(1.8rem, 4.2vw, 3.1rem); max-width: 28ch; }
     h3 { font-size: clamp(1.2rem, 2.4vw, 1.6rem); }
 
     .lead {
       font-size: clamp(1.05rem, 2vw, 1.35rem);
       color: var(--muted);
-      max-width: 44ch;
+      max-width: 52ch;
       line-height: 1.5;
     }
 
@@ -253,8 +254,8 @@
       justify-content: space-between;
       padding: 0.75rem 1.25rem;
       background: linear-gradient(transparent, rgba(18, 21, 26, 0.92) 40%);
-      font-size: 0.8rem;
-      color: var(--muted);
+      font-size: 0.85rem;
+      color: #c5c9d2;
       pointer-events: none;
     }
 
@@ -279,15 +280,15 @@
       top: 1rem;
       right: 1rem;
       z-index: 5;
-      font-size: 0.75rem;
-      color: var(--muted);
-      opacity: 0.7;
+      font-size: 0.82rem;
+      color: #c5c9d2;
+      opacity: 0.9;
     }
 
     .quote {
       font-family: Geologica, sans-serif;
       font-size: clamp(1.4rem, 3.2vw, 2.2rem);
-      max-width: 22ch;
+      max-width: 26ch;
       line-height: 1.25;
     }
 
@@ -337,7 +338,7 @@
     </section>
 
     <!-- 2 -->
-    <section class="slide" data-min="2">
+    <section class="slide" data-min="1">
       <p class="eyebrow">Главный вопрос</p>
       <h2>Как получить пассивный доход 500 000 ₽ — легко, без времени и без капитала?</h2>
     </section>
@@ -360,7 +361,7 @@
     </section>
 
     <!-- 5 -->
-    <section class="slide" data-min="2">
+    <section class="slide" data-min="1">
       <p class="eyebrow">Карта лекции</p>
       <h2>Четыре слоя одной системы</h2>
       <div class="grid-4">
@@ -372,7 +373,7 @@
     </section>
 
     <!-- 6 -->
-    <section class="slide" data-min="2">
+    <section class="slide" data-min="1">
       <p class="eyebrow">Блок 1 · Контроль</p>
       <h2>Грамотность — не аскеза и не «жить на гречке»</h2>
       <div class="grid-2">
@@ -388,7 +389,7 @@
     </section>
 
     <!-- 7 -->
-    <section class="slide" data-min="3">
+    <section class="slide" data-min="2">
       <p class="eyebrow">Блок 1 · Бюджет</p>
       <h2>Два шага, которые открывают глаза</h2>
       <ol class="steps">
@@ -399,7 +400,7 @@
     </section>
 
     <!-- 8 -->
-    <section class="slide" data-min="2">
+    <section class="slide" data-min="1">
       <p class="eyebrow">Блок 1 · Где утекает</p>
       <h2>Типичные дыры — без морали</h2>
       <ul class="two-col-list">
@@ -427,7 +428,7 @@
     </section>
 
     <!-- 10 -->
-    <section class="slide" data-min="3">
+    <section class="slide" data-min="2">
       <p class="eyebrow">Блок 1 · Подушка</p>
       <h2>Резерв — ваш главный актив</h2>
       <div class="formula">При скачущем доходе: 9–12 месяцев обязательных расходов.<br />Считаем минимум жизни + 20%, не «как в лучший месяц».</div>
@@ -440,7 +441,7 @@
     </section>
 
     <!-- 11 -->
-    <section class="slide" data-min="2">
+    <section class="slide" data-min="1">
       <p class="eyebrow">Блок 1 · Три уровня</p>
       <h2>Безопасность → независимость → свобода</h2>
       <div class="grid-3">
@@ -464,7 +465,7 @@
     </section>
 
     <!-- 13 -->
-    <section class="slide" data-min="3">
+    <section class="slide" data-min="2">
       <p class="eyebrow">Блок 2 · Защита · инвестскам</p>
       <h2>Обман на доверии — до сих пор top of mind</h2>
       <div class="grid-2">
@@ -485,7 +486,7 @@
     </section>
 
     <!-- 14 -->
-    <section class="slide" data-min="2">
+    <section class="slide" data-min="1">
       <p class="eyebrow">Блок 2 · Защита · пирамида</p>
       <h2>Кто снимает сливки — и кто платит</h2>
       <div class="grid-4">
@@ -515,7 +516,7 @@
     </section>
 
     <!-- 16 -->
-    <section class="slide" data-min="2">
+    <section class="slide" data-min="1">
       <p class="eyebrow">Блок 3 · Архитектура</p>
       <h2>Не с тикера. С жизненной задачи</h2>
       <div class="grid-2">
@@ -531,7 +532,7 @@
     </section>
 
     <!-- 17 -->
-    <section class="slide" data-min="3">
+    <section class="slide" data-min="2">
       <p class="eyebrow">Блок 3 · Четыре корзины</p>
       <h2>Одни деньги — разные задачи</h2>
       <div class="grid-4">
@@ -545,7 +546,7 @@
     </section>
 
     <!-- 18 -->
-    <section class="slide" data-min="3">
+    <section class="slide" data-min="2">
       <p class="eyebrow">Блок 3 · Универсальная шкала</p>
       <h2>Три «покемона» в любом активе</h2>
       <div class="grid-3">
@@ -557,7 +558,7 @@
     </section>
 
     <!-- 19 -->
-    <section class="slide" data-min="3">
+    <section class="slide" data-min="2">
       <p class="eyebrow">Блок 3 · Облигации и акции</p>
       <h2>Высокий купон — счёт за риск</h2>
       <div class="grid-2">
@@ -574,7 +575,7 @@
     </section>
 
     <!-- 20 -->
-    <section class="slide" data-min="2">
+    <section class="slide" data-min="1">
       <p class="eyebrow">Блок 3 · Недвижимость в двух фразах</p>
       <h2>«Квадратный метр дорожает» — не гипотеза</h2>
       <ul class="clean">
@@ -585,7 +586,7 @@
     </section>
 
     <!-- 21 -->
-    <section class="slide" data-min="3">
+    <section class="slide" data-min="2">
       <p class="eyebrow">Блок 4 · Конструкция</p>
       <h2>Что реально можно инвестировать</h2>
       <div class="formula">Свободный капитал = накопления − резерв − цели до 3 лет − дорогие долги</div>
@@ -598,7 +599,7 @@
     </section>
 
     <!-- 22 -->
-    <section class="slide" data-min="3">
+    <section class="slide" data-min="2">
       <p class="eyebrow">Блок 4 · Пять вопросов</p>
       <h2>Перед любой облигацией (и любой «идеей»)</h2>
       <ol class="steps">
@@ -612,7 +613,7 @@
     </section>
 
     <!-- 23 -->
-    <section class="slide" data-min="2">
+    <section class="slide" data-min="1">
       <p class="eyebrow">Блок 4 · Сложный процент</p>
       <h2>Без магии: взносы → реинвест → время</h2>
       <div class="grid-3">
@@ -624,7 +625,7 @@
     </section>
 
     <!-- 24 -->
-    <section class="slide" data-min="2">
+    <section class="slide" data-min="1">
       <p class="eyebrow">Итог · Личный регламент</p>
       <h2>Не советы. Правила под вашу жизнь</h2>
       <ul class="two-col-list">
